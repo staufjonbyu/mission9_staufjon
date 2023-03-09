@@ -31,6 +31,10 @@ namespace bookstore
            {
                options.UseSqlite(Configuration["ConnectionStrings:BookDbConnection"]);
            });
+
+            services.AddRazorPages();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,16 +52,26 @@ namespace bookstore
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("typepage", "{category}/Page{pageNum}", new { Controller = "Home", action = "Index" });
+
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                  name: "Paging",
+                  pattern: "Page{pageNum}",
+                  defaults: new { Controller = "Home", action = "Index", pageNum = 1 });
+
+                endpoints.MapControllerRoute("type", "{category}", new { Controller = "Home", action = "Index", pageNum = 1 });
+
+
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
+
             });
         }
     }

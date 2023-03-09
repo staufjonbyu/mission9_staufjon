@@ -1,0 +1,43 @@
+﻿@page
+@model bookstore.Pages.CartModel
+@{
+}
+<h2 class="font-weight-bold ">
+    Your cart
+</h2>
+@* This is code for bootstrap I used the text-muted class to make it appear lighter *@    
+<h4>
+    <small class="text-muted">Here are the Items you have selected so far</small>
+</h4>
+
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var i in Model.basket.Items)
+            {
+                <tr>
+                    <td>@i.Book.Title</td>
+                    <td>@i.Quantity</td>
+                    <td>@i.Book.Price</td>
+                    <td>@(i.Quantity * i.Book.Price)</td>
+                </tr>
+            }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">Total:</td>
+            <td>@Model.basket.CalculateTotal().ToString("c")</td>
+        </tr>
+    </tfoot>
+</table>
+<div>
+    <a class="btn btn-primary" href="@Model.ReturnUrl">Continue Shopping</a>
+</div>

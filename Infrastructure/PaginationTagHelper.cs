@@ -32,7 +32,7 @@ namespace bookstore.Infrastructure
             {
                 TagBuilder tag = new TagBuilder("a");
                 tag.Attributes["href"] = urlHelper.Action(PageAction,
-                   new { productPage = i });
+                   new { pageNum = i });
                 if (PageClassesEnabled)
                 {
                     tag.AddCssClass(PageClass);
