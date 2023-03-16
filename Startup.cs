@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using bookstore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace bookstore
 {
@@ -26,6 +27,7 @@ namespace bookstore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IBookStoreRepository, EFBookStoreRepository>();
+            services.AddScoped<IPurchaseRepository, EFPurchaseRepository>();
             services.AddControllersWithViews();
             services.AddDbContext<BookStoreContext>(options =>
            {
@@ -35,6 +37,8 @@ namespace bookstore
             services.AddRazorPages();
             services.AddDistributedMemoryCache();
             services.AddSession();
+            services.AddScoped<Basket>(x => SessionBasket.GetBasket(x));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,12 +65,12 @@ namespace bookstore
             {
                 endpoints.MapControllerRoute("typepage", "{category}/Page{pageNum}", new { Controller = "Home", action = "Index" });
 
+                endpoints.MapControllerRoute("type", "{category}", new { Controller = "Home", action = "Index", pageNum = 1 });
                 endpoints.MapControllerRoute(
                   name: "Paging",
                   pattern: "Page{pageNum}",
                   defaults: new { Controller = "Home", action = "Index", pageNum = 1 });
 
-                endpoints.MapControllerRoute("type", "{category}", new { Controller = "Home", action = "Index", pageNum = 1 });
 
 
                 endpoints.MapDefaultControllerRoute();
